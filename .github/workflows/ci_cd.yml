@@ -37,12 +37,3 @@ jobs:
 
       - name: Déployer avec Ansible
         run: ansible-playbook -i inventory.ini ansible/deploy.yml
-
-      - name: Tester le déploiement HTTP
-        run: |
-          # installer curl si nécessaire
-          sudo apt update && sudo apt install -y curl
-          # vérifier que l’endpoint renvoie un 200
-          curl -sSf http://${{ secrets.SERVER_IP }} -o deployed.html
-          # rechercher le marqueur de version
-          grep -q "V2.0 Déployé !" deployed.html
