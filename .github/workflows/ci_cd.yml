@@ -34,8 +34,7 @@ jobs:
       - name: Installer Ansible
         run: |
           sudo apt update
-          sudo apt install -y python3-pip
-          pip3 install ansible
+          sudo apt install -y ansible
 
       - name: Préparer l’inventaire
         run: |
