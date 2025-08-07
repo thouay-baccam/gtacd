@@ -1,3 +1,4 @@
+# ansible/deploy.yml
 - name: Déploiement de l’app GTACD
   hosts: tp
   become: true
@@ -11,6 +12,11 @@
         name: nginx
         state: present
         update_cache: yes
+
+    - name: Désactiver le site Nginx par défaut
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
 
     - name: Créer le dossier de l’app
       file:
@@ -26,12 +32,13 @@
         dest: "{{ dest }}/"
         mode: '0644'
 
-    - name: Déployer la conf Nginx
+    - name: Déployer la configuration Nginx
       template:
         src: nginx_vhost.conf.j2
         dest: /etc/nginx/sites-available/tp-app.conf
+        mode: '0644'
 
-    - name: Activer le site
+    - name: Activer le site tp-app
       file:
         src: /etc/nginx/sites-available/tp-app.conf
         dest: /etc/nginx/sites-enabled/tp-app.conf
