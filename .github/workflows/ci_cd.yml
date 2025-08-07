@@ -1,3 +1,5 @@
+# .github/workflows/ci_cd.yml
+
 name: CI/CD pipeline
 
 on:
@@ -13,12 +15,12 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@v3
 
-      - name: Exécuter le health-check
+      - name: Executer le health-check
         run: bash app/check_app.sh
 
   deploy:
     needs: build-and-test
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     steps:
       - name: Checkout du code
