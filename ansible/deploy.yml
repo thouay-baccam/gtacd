@@ -1,0 +1,44 @@
+- name: Déploiement de l’app GTACD
+  hosts: tp
+  become: true
+
+  vars:
+    dest: /var/www/html/tp-app
+
+  tasks:
+    - name: Installer Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Créer le dossier de l’app
+      file:
+        path: "{{ dest }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Copier les fichiers de l’app
+      copy:
+        src: ../app/
+        dest: "{{ dest }}/"
+        mode: '0644'
+
+    - name: Déployer la conf Nginx
+      template:
+        src: nginx_vhost.conf.j2
+        dest: /etc/nginx/sites-available/tp-app.conf
+
+    - name: Activer le site
+      file:
+        src: /etc/nginx/sites-available/tp-app.conf
+        dest: /etc/nginx/sites-enabled/tp-app.conf
+        state: link
+        force: yes
+
+    - name: Redémarrer Nginx
+      service:
+        name: nginx
+        state: restarted
